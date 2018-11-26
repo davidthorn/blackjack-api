@@ -1,0 +1,27 @@
+{
+  "name": "webpack-typescript",
+  "version": "1.0.0",
+  "description": "A skeleton project to be used to create typescript project using npm and webpack",
+  "main": "src/main.ts",
+  "dependencies": {},
+  "devDependencies": {
+    "ts-loader": "^5.3.0",
+    "typescript": "^3.1.6",
+    "webpack": "^4.26.0",
+    "webpack-cli": "^3.1.2"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build" : "webpack && cp -r assets/* dist && tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/davidthorn/webpack-typescript.git"
+  },
+  "author": "David Thorn",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/davidthorn/webpack-typescript/issues"
+  },
+  "homepage": "https://github.com/davidthorn/webpack-typescript#readme"
+}
