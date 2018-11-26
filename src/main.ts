@@ -1,28 +1,25 @@
-interface Project {
-    helloWorld(): void
-}
+import { BlackJackPlayer } from './BlackJackPlayer'
+import { BlackJackAPI } from './BlackJackAPI'
 
-interface Window {
-    project: Project
-}
-
-class ProjectObject implements Project {
-
-    constructor() {  }
-
-    helloWorld(): void {
-        const element = document.createElement('h1')
-        let text = document.createTextNode('Hello, World!')
-        element.appendChild(text)
-        document.body.appendChild(element)
-    }
-
-}
-
-Window.prototype.project = ((): Project =>  {
-    return new ProjectObject()
+Window.prototype.blackjack = ((): BlackApiInterface =>  {
+    return new BlackJackAPI(new BlackJackPlayer(-1 , 0 , true))
 })()
 
 window.onload = () => {
-    window.project.helloWorld()
+    
+}
+
+Window.prototype.runTest = () => {
+    window.blackjack.initialise(10,1)
+    window.blackjack.start()
+
+    for(var x= 0; x < window.blackjack.players.length; x++) {
+        let player = window.blackjack.players[x]
+        while(!player.isBust() || player.hasBlackjack()) {
+            if(player.isDealer && player.totalCards() >= 17 ) return 
+            player.hit(window.blackjack.deal())
+        }
+        player.totalCards()
+    }
+
 }

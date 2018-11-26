@@ -1,7 +1,7 @@
 {
-  "name": "webpack-typescript",
+  "name": "blackjack-api",
   "version": "1.0.0",
-  "description": "A skeleton project to be used to create typescript project using npm and webpack",
+  "description": "An api to play a game of black jack",
   "main": "src/main.ts",
   "dependencies": {},
   "devDependencies": {
@@ -16,12 +16,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/davidthorn/webpack-typescript.git"
+    "url": "git+https://github.com/davidthorn/blackjack-api.git"
   },
   "author": "David Thorn",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/davidthorn/webpack-typescript/issues"
+    "url": "https://github.com/davidthorn/blackjack-api/issues"
   },
-  "homepage": "https://github.com/davidthorn/webpack-typescript#readme"
+  "homepage": "https://github.com/davidthorn/blackjack-api#readme"
 }
