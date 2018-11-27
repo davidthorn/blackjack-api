@@ -1,12 +1,18 @@
 interface Window {
     blackjack: BlackApiInterface
     runTest(): void
+    showDealersFirstCard():void
+    showDealersCards():void
+    showPlayersCards():void
+    dealPlayerCard(): void
+    dealDealerCard(): void
 }
 
 interface PlayingCardInterface {
     suite: "diamond" | "heart" | "club" | "spade"
     cardNumber: number
     isAce: boolean
+    name: string
 }
 
 interface BlackApiInterface {
@@ -124,6 +130,7 @@ interface BlackJackPlayerInterface {
     wager?: number
     bank: number
     isDealer: boolean 
+    total: number
 
     totalCards(): number
     

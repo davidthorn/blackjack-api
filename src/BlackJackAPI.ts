@@ -98,28 +98,28 @@ export class BlackJackAPI implements BlackApiInterface {
       for(let y = 0; y < this.numberOfDecks; y++) {
 
           for(let y1 = 1; y1 <= 13; y1++) {
-              const card = new PlayingCard("diamond", y1 , y1 === 1)
+              const card = new PlayingCard("diamond", String(y1) , y1 , y1 === 1)
               this.cards.push(card)
           }
 
           this.cards = this.shuffle(this.cards)
 
           for(let y2 = 1; y2 <= 13; y2++) {
-              const cardY2 = new PlayingCard("heart", y2 , y2 === 1)
+              const cardY2 = new PlayingCard("heart", String(y2) ,y2 , y2 === 1)
               this.cards.push(cardY2)
           }
 
           this.cards = this.shuffle(this.cards)
 
           for(let y3 = 1; y3 <= 13; y3++) {
-              const cardY3 = new PlayingCard("club", y3 , y3 === 1)
+              const cardY3 = new PlayingCard("club", String(y3) ,y3 , y3 === 1)
               this.cards.push(cardY3)
           }
           
           this.cards = this.shuffle(this.cards)
           
           for(let y4 = 1; y4 <= 13; y4++) {
-              const cardY4 = new PlayingCard("spade", y4 , y4 === 1)
+              const cardY4 = new PlayingCard("spade",String(y4) , y4 , y4 === 1)
               this.cards.push(cardY4)
           }
           
@@ -217,17 +217,14 @@ export class BlackJackAPI implements BlackApiInterface {
     let tmpCards = cards
     const totalCards = cards.length - 1
 
-    for(let n = 0; n < totalCards * 20000; n++) {
-        let r = Math.ceil(Math.random() * totalCards)
-        let q = Math.ceil(Math.random() * totalCards)
-        if(r !== q) {
-            let tmp = tmpCards[r]
-            tmpCards[r] = tmpCards[q]
-            tmpCards[q] = tmp
-        }
+    for(let n = totalCards; n > 0; n--) {
+        let r = Math.floor(Math.random() * n)
+        let tmp = tmpCards[r]
+        tmpCards[r] = tmpCards[n]
+        tmpCards[n] = tmp
     }
 
-    return cards
+    return tmpCards
   }
 
 }

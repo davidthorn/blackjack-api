@@ -73,22 +73,22 @@ var BlackJackAPI = /** @class */ (function () {
         this.addPlayer(this.dealer);
         for (var y = 0; y < this.numberOfDecks; y++) {
             for (var y1 = 1; y1 <= 13; y1++) {
-                var card = new PlayingCard_1.PlayingCard("diamond", y1, y1 === 1);
+                var card = new PlayingCard_1.PlayingCard("diamond", String(y1), y1, y1 === 1);
                 this.cards.push(card);
             }
             this.cards = this.shuffle(this.cards);
             for (var y2 = 1; y2 <= 13; y2++) {
-                var cardY2 = new PlayingCard_1.PlayingCard("heart", y2, y2 === 1);
+                var cardY2 = new PlayingCard_1.PlayingCard("heart", String(y2), y2, y2 === 1);
                 this.cards.push(cardY2);
             }
             this.cards = this.shuffle(this.cards);
             for (var y3 = 1; y3 <= 13; y3++) {
-                var cardY3 = new PlayingCard_1.PlayingCard("club", y3, y3 === 1);
+                var cardY3 = new PlayingCard_1.PlayingCard("club", String(y3), y3, y3 === 1);
                 this.cards.push(cardY3);
             }
             this.cards = this.shuffle(this.cards);
             for (var y4 = 1; y4 <= 13; y4++) {
-                var cardY4 = new PlayingCard_1.PlayingCard("spade", y4, y4 === 1);
+                var cardY4 = new PlayingCard_1.PlayingCard("spade", String(y4), y4, y4 === 1);
                 this.cards.push(cardY4);
             }
             this.cards = this.shuffle(this.cards);
@@ -173,16 +173,13 @@ var BlackJackAPI = /** @class */ (function () {
     BlackJackAPI.prototype.shuffle = function (cards) {
         var tmpCards = cards;
         var totalCards = cards.length - 1;
-        for (var n = 0; n < totalCards * 20000; n++) {
-            var r = Math.ceil(Math.random() * totalCards);
-            var q = Math.ceil(Math.random() * totalCards);
-            if (r !== q) {
-                var tmp = tmpCards[r];
-                tmpCards[r] = tmpCards[q];
-                tmpCards[q] = tmp;
-            }
+        for (var n = totalCards; n > 0; n--) {
+            var r = Math.floor(Math.random() * n);
+            var tmp = tmpCards[r];
+            tmpCards[r] = tmpCards[n];
+            tmpCards[n] = tmp;
         }
-        return cards;
+        return tmpCards;
     };
     return BlackJackAPI;
 }());

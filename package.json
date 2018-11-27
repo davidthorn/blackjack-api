@@ -3,7 +3,10 @@
   "version": "1.0.0",
   "description": "An api to play a game of black jack",
   "main": "src/main.ts",
-  "dependencies": {},
+  "dependencies": {
+    "@types/node": "^10.12.10",
+    "assert": "^1.4.1"
+  },
   "devDependencies": {
     "ts-loader": "^5.3.0",
     "typescript": "^3.1.6",
@@ -11,8 +14,9 @@
     "webpack-cli": "^3.1.2"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build" : "webpack && cp -r assets/* dist && tsc"
+    "test": "node src/test/test.totalCards.js",
+    "test-player" : "tsc src/test/*.ts; node src/test/test.player.js",
+    "build": "webpack && cp -r assets/* dist && tsc"
   },
   "repository": {
     "type": "git",

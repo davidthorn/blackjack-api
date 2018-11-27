@@ -1,5 +1,5 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
+exports.__esModule = true;
 var BlackJackPlayer = /** @class */ (function () {
     /**
      *Creates an instance of BlackJackPlayer.
@@ -26,8 +26,10 @@ var BlackJackPlayer = /** @class */ (function () {
                 throw new Error('cards cannot be empty');
             if (!a.isAce)
                 throw new Error('only aces should be supplied in cards');
-            if (t + 10 + c.length <= 21) {
-                t += 10;
+            /// add the ace to the used cards array
+            this.usedCards.push(a);
+            if (t + 11 + c.length <= 21) {
+                t += 11;
             }
             else if (t + 1 + c.length <= 21) {
                 t += 1;
@@ -39,10 +41,10 @@ var BlackJackPlayer = /** @class */ (function () {
         return t;
     };
     BlackJackPlayer.prototype.totalCards = function () {
-        if (this.total !== 0)
-            return this.total;
+        if (this.cards.length < 2 && this.usedCards.length === 0) {
+            throw new Error('The player has not received 2 cards yet therefore a total cannot be produced');
+        }
         var t = 0;
-        console.log('checking player is dealer ', this.isDealer);
         for (var x = 0; x < this.cards.length; x++) {
             switch (this.cards[x].isAce) {
                 case true: break;
@@ -52,12 +54,15 @@ var BlackJackPlayer = /** @class */ (function () {
                     break;
             }
         }
-        this.cards = this.cards.filter(function (t) { t.isAce === true; });
+        this.cards = this.cards.filter(function (e, i, d) {
+            if (e.isAce === true)
+                return d[i];
+        });
         if (this.cards.length === 0) {
-            this.total = t;
-            return t;
+            this.total += t;
+            return this.total;
         }
-        this.total = this.addAcesToTotal(this.cards, t);
+        this.total += this.addAcesToTotal(this.cards, t);
         return this.total;
     };
     /**
@@ -85,13 +90,16 @@ var BlackJackPlayer = /** @class */ (function () {
      * @memberof BlackJackPlayerInterface
      */
     BlackJackPlayer.prototype.hit = function (card) {
-        for (var x = 0; x < this.usedCards.length; x++) {
-            this.cards.push(this.usedCards[x]);
-            delete this.usedCards[x];
+        if (this.hasHeld) {
+            throw new Error('The player has held and cannot receive any more cards');
         }
-        this.total = 0;
-        this.hasHeld = false;
         this.cards.push(card);
+        // we only continue to check if bust if the user has more than 2 cards
+        if (this.cards.length <= 2)
+            return;
+        if (this.isBust()) {
+            throw new Error('The player has bust with a total of : ' + this.total);
+        }
     };
     /**
      * The dealer should call this method prior to giving the player a card
@@ -105,6 +113,9 @@ var BlackJackPlayer = /** @class */ (function () {
      * @memberof BlackJackPlayerInterface
      */
     BlackJackPlayer.prototype.hold = function () {
+        if (this.usedCards.length < 2) {
+            throw new Error('Player cannot hold until they have received 2 cards minimum');
+        }
         this.hasHeld = true;
     };
     /**
@@ -120,9 +131,6 @@ var BlackJackPlayer = /** @class */ (function () {
         while (this.cards.length) {
             this.cards.pop();
         }
-        console.log(this.usedCards.length);
-        console.log(this.cards.length);
-        console.log('completed');
         this.hasHeld = false;
         this.total = 0;
         this.wager = undefined;
@@ -135,7 +143,10 @@ var BlackJackPlayer = /** @class */ (function () {
      * @memberof BlackJackPlayerInterface
      */
     BlackJackPlayer.prototype.receiveWinnings = function (winnings) {
-        this.bank = winnings;
+        if (this.isBust()) {
+            throw new Error('This player cannot receive winnings because it is bust');
+        }
+        this.bank += winnings;
     };
     return BlackJackPlayer;
 }());

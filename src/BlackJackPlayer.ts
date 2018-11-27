@@ -31,8 +31,11 @@ export class BlackJackPlayer implements BlackJackPlayerInterface {
             if(a === undefined) throw new Error('cards cannot be empty')
             if(!a.isAce) throw new Error('only aces should be supplied in cards') 
             
-            if(t + 10 + c.length <= 21) {
-                t += 10
+            /// add the ace to the used cards array
+            this.usedCards.push(a)
+            
+            if(t + 11 + c.length <= 21) {
+                t += 11
             } else if ( t + 1 + c.length <= 21 ) {
                 t += 1
             } else {
@@ -43,11 +46,13 @@ export class BlackJackPlayer implements BlackJackPlayerInterface {
     }
 
     totalCards(): number {
-
-        if(this.total !== 0) return this.total
+       
+        if(this.cards.length < 2 && this.usedCards.length === 0) {
+            throw new Error('The player has not received 2 cards yet therefore a total cannot be produced')
+        }
 
         let t: number = 0
-        console.log('checking player is dealer ' , this.isDealer)
+        
         for(let x = 0; x < this.cards.length; x++) {
             switch(this.cards[x].isAce) {
                 case true: break
@@ -57,15 +62,17 @@ export class BlackJackPlayer implements BlackJackPlayerInterface {
                 break
             }
         }
-
-        this.cards = this.cards.filter(t => { t.isAce === true})
+        
+        this.cards = this.cards.filter((e,i,d) => { 
+            if (e.isAce === true) return d[i]
+        })
 
         if(this.cards.length === 0)  {
-            this.total = t    
-            return t
+            this.total += t    
+            return this.total
         }
        
-        this.total = this.addAcesToTotal(this.cards , t)
+        this.total += this.addAcesToTotal(this.cards , t)
         return this.total
     }
 
@@ -99,15 +106,18 @@ export class BlackJackPlayer implements BlackJackPlayerInterface {
      */
     hit(card: PlayingCardInterface): void {
 
-        for(let x = 0; x < this.usedCards.length; x++) {
-            this.cards.push(this.usedCards[x])
-            delete this.usedCards[x]
+        if(this.hasHeld) {
+            throw new Error('The player has held and cannot receive any more cards')
         }
 
-        this.total = 0
-        this.hasHeld = false
-
         this.cards.push(card)
+
+        // we only continue to check if bust if the user has more than 2 cards
+        if(this.cards.length <= 2) return
+
+        if(this.isBust()) {
+            throw new Error('The player has bust with a total of : ' + this.total)
+        }
     }
 
     /**
@@ -122,6 +132,11 @@ export class BlackJackPlayer implements BlackJackPlayerInterface {
      * @memberof BlackJackPlayerInterface
      */
     hold() {
+
+        if(this.usedCards.length < 2) {
+            throw new Error('Player cannot hold until they have received 2 cards minimum')
+        }
+
         this.hasHeld = true
     }
 
@@ -141,13 +156,9 @@ export class BlackJackPlayer implements BlackJackPlayerInterface {
             this.cards.pop()
         }
        
-        console.log(this.usedCards.length)
-        console.log(this.cards.length)
-        console.log('completed')
         this.hasHeld = false
         this.total = 0
         this.wager = undefined
-    
     }
 
     /**
@@ -158,7 +169,12 @@ export class BlackJackPlayer implements BlackJackPlayerInterface {
      * @memberof BlackJackPlayerInterface
      */
     receiveWinnings(winnings: number): void {
-        this.bank = winnings
+
+        if(this.isBust()) {
+            throw new Error('This player cannot receive winnings because it is bust')
+        }
+
+        this.bank += winnings
     }
 
 }
