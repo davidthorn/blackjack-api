@@ -1,16 +1,8 @@
 "use strict";
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-    result["default"] = mod;
-    return result;
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 var BlackJackPlayer_1 = require("./BlackJackPlayer");
 var BlackJackAPI_1 = require("./BlackJackAPI");
 var PlayingCard_1 = require("./PlayingCard");
-var assert = __importStar(require("assert"));
 Window.prototype.blackjack = (function () {
     return new BlackJackAPI_1.BlackJackAPI(new BlackJackPlayer_1.BlackJackPlayer(-1, 0, true));
 })();
@@ -91,30 +83,9 @@ Window.prototype.runTest = function () {
         window.blackjack.players[0] = player;
         window.showPlayersCards();
         cards.pop();
-        assert.equal(player.total, data.t, "The players total should be : " + data.t);
-        assert.equal(player.hasBlackjack(), data.bj, "The player should have have black jack: " + data.bj);
-        assert.equal(player.isBust(), data.bust, "The player should be bust: " + data.bust);
         player.reset();
     };
-    // function assert(equation: boolean , message: string , errorMessage: string): void {
-    //     switch(equation) {
-    //         case true:
-    //         console.log(message)
-    //     }
-    // }
     while (cards.length > 0) {
         _loop_1();
     }
-    // window.blackjack.initialise(10,1)
-    // window.blackjack.start()
-    // window.blackjack.dealer.cards = cards
-    // window.showDealersCards()
-    // for(var x= 0; x < window.blackjack.players.length; x++) {
-    //     let player = window.blackjack.players[x]
-    //     while(!player.isBust() || player.hasBlackjack()) {
-    //         if(player.isDealer && player.totalCards() >= 17 ) return 
-    //         player.hit(window.blackjack.deal())
-    //     }
-    //     player.totalCards()
-    // }
 };

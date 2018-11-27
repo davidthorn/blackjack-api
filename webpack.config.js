@@ -1,7 +1,7 @@
 const path = require('path');
 
 module.exports = {
-  mode: "development",
+  mode: "production",
   watch: false,
   entry: './src/main.ts',
   module: {
@@ -9,7 +9,7 @@ module.exports = {
       {
         test: /\.tsx?$/,
         use: 'ts-loader',
-        exclude: /node_modules/
+        exclude: [ "/node_modules/" , "/src/test" ]
       }
     ]
   },

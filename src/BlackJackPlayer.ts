@@ -51,6 +51,8 @@ export class BlackJackPlayer implements BlackJackPlayerInterface {
             throw new Error('The player has not received 2 cards yet therefore a total cannot be produced')
         }
 
+        if(this.hasHeld) return this.total
+
         let t: number = 0
         
         let totalOfRequiredUsedCards = this.cards.length + this.usedCards.length
@@ -87,12 +89,19 @@ export class BlackJackPlayer implements BlackJackPlayerInterface {
 
      /**
      * Should return true if all cards add up to 21
+     * If the player has black jack then this method should set hasHeld
+     * to true so that we know that no more cards should be dealt
+     * and also that winnings must be paid
      *
      * @returns {boolean}
      * @memberof BlackJackPlayerInterface
      */
     hasBlackjack(): boolean {
-        return this.totalCards() === 21
+        const result = this.totalCards() === 21
+        if(result) {
+            this.hasHeld = true
+        }
+        return result
     }
 
     /**
@@ -125,6 +134,8 @@ export class BlackJackPlayer implements BlackJackPlayerInterface {
         if(this.isBust()) {
             throw new Error('The player has bust with a total of : ' + this.total)
         }
+
+        this.hasBlackjack()
     }
 
     /**
@@ -155,6 +166,14 @@ export class BlackJackPlayer implements BlackJackPlayerInterface {
      */
     reset(): void {
         
+        if(this.usedCards.length < 2) {
+            throw new Error('You cannot reset a player until they have at least two cards and called totalCards')
+        }
+
+        if(this.hasHeld && this.hasBlackjack()) {
+            throw new Error('The player has black jack which means the player must be paid winning')
+        }
+
         while(this.usedCards.length) {
             this.usedCards.pop()
         }
@@ -181,6 +200,7 @@ export class BlackJackPlayer implements BlackJackPlayerInterface {
             throw new Error('This player cannot receive winnings because it is bust')
         }
 
+        this.hasHeld = false
         this.bank += winnings
     }
 

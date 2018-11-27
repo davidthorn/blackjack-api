@@ -44,6 +44,8 @@ var BlackJackPlayer = /** @class */ (function () {
         if (this.cards.length < 2 && this.usedCards.length === 0) {
             throw new Error('The player has not received 2 cards yet therefore a total cannot be produced');
         }
+        if (this.hasHeld)
+            return this.total;
         var t = 0;
         var totalOfRequiredUsedCards = this.cards.length + this.usedCards.length;
         for (var x = 0; x < this.cards.length; x++) {
@@ -71,12 +73,19 @@ var BlackJackPlayer = /** @class */ (function () {
     };
     /**
     * Should return true if all cards add up to 21
+    * If the player has black jack then this method should set hasHeld
+    * to true so that we know that no more cards should be dealt
+    * and also that winnings must be paid
     *
     * @returns {boolean}
     * @memberof BlackJackPlayerInterface
     */
     BlackJackPlayer.prototype.hasBlackjack = function () {
-        return this.totalCards() === 21;
+        var result = this.totalCards() === 21;
+        if (result) {
+            this.hasHeld = true;
+        }
+        return result;
     };
     /**
      * Should return true if all cards add up to more than 21
@@ -104,6 +113,7 @@ var BlackJackPlayer = /** @class */ (function () {
         if (this.isBust()) {
             throw new Error('The player has bust with a total of : ' + this.total);
         }
+        this.hasBlackjack();
     };
     /**
      * The dealer should call this method prior to giving the player a card
@@ -129,6 +139,12 @@ var BlackJackPlayer = /** @class */ (function () {
      * @memberof BlackJackPlayerInterface
      */
     BlackJackPlayer.prototype.reset = function () {
+        if (this.usedCards.length < 2) {
+            throw new Error('You cannot reset a player until they have at least two cards and called totalCards');
+        }
+        if (this.hasHeld && this.hasBlackjack()) {
+            throw new Error('The player has black jack which means the player must be paid winning');
+        }
         while (this.usedCards.length) {
             this.usedCards.pop();
         }
@@ -150,6 +166,7 @@ var BlackJackPlayer = /** @class */ (function () {
         if (this.isBust()) {
             throw new Error('This player cannot receive winnings because it is bust');
         }
+        this.hasHeld = false;
         this.bank += winnings;
     };
     return BlackJackPlayer;

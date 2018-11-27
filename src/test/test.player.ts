@@ -22,7 +22,7 @@ assert.equal(player.hasBlackjack() , true , "The player should have black jack")
 assert.equal(player.isBust() , false , "The player should not be bust")
 assert.equal(player.cards.length , 0, "The player should have 0 cards in cards")
 assert.equal(player.usedCards.length , 2, "The player should have 2 cards in used cards")
-
+player.receiveWinnings(100)
 player.reset()
 
 assert.equal(player.cards.length , 0, "The player should have 0 cards in cards")
@@ -47,9 +47,10 @@ assert.equal(player.isBust() , true , "The player should be bust")
 player.reset()
 player.hit(card)
 player.hit(card1)
+let currentBalance = player.bank
 let amount = 100
 player.receiveWinnings(amount)
-assert.equal(player.bank , amount, `The players bank should have ${amount} in it`)
+assert.equal(player.bank , amount + currentBalance, `The players bank should have ${amount} in it, but has ${currentBalance}`)
 
 let balance = player.bank
 player.receiveWinnings(amount)
@@ -85,12 +86,28 @@ assert.throws(() => { new PlayingCard("diamond" , "fake" , 12 , false) }, "This 
 
 assert.throws(() => { new PlayingCard("diamond" , "13" , 20 , false) }, "This method should throw because its card number is out of range")
 
+player.hit(card)
+player.hit(card2)
+
 player.reset()
 player.hit(card)
 player.hit(card1)
 assert.throws(() => { player.hit(card2) } , "Should throw" )
 
 assert.throws(() => { player.receiveWinnings(100) } , "Should throw because place is bust and is receive winnings")
+
+player.reset()
+card.cardNumber = 1
+card.isAce = true
+card.name = "Ace"
+player.hit(card)
+player.hit(card1)
+assert.equal(player.total , 21 , `The player should have 21 but has ${player.total}`)
+assert.equal(player.hasHeld ,true , "The player should be held")
+assert.throws(() => {player.reset()} , "The player must be paid winning because they have black jack")
+
+
+
 
 
 
