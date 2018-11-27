@@ -45,6 +45,7 @@ var BlackJackPlayer = /** @class */ (function () {
             throw new Error('The player has not received 2 cards yet therefore a total cannot be produced');
         }
         var t = 0;
+        var totalOfRequiredUsedCards = this.cards.length + this.usedCards.length;
         for (var x = 0; x < this.cards.length; x++) {
             switch (this.cards[x].isAce) {
                 case true: break;
@@ -63,6 +64,9 @@ var BlackJackPlayer = /** @class */ (function () {
             return this.total;
         }
         this.total += this.addAcesToTotal(this.cards, t);
+        if (totalOfRequiredUsedCards !== this.usedCards.length) {
+            throw new Error("Used cards should now have " + this.usedCards + " but has " + totalOfRequiredUsedCards);
+        }
         return this.total;
     };
     /**
@@ -95,7 +99,7 @@ var BlackJackPlayer = /** @class */ (function () {
         }
         this.cards.push(card);
         // we only continue to check if bust if the user has more than 2 cards
-        if (this.cards.length <= 2)
+        if (this.cards.length < 2 && this.usedCards.length === 0)
             return;
         if (this.isBust()) {
             throw new Error('The player has bust with a total of : ' + this.total);

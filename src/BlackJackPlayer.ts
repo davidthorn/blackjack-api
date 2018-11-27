@@ -53,6 +53,8 @@ export class BlackJackPlayer implements BlackJackPlayerInterface {
 
         let t: number = 0
         
+        let totalOfRequiredUsedCards = this.cards.length + this.usedCards.length
+
         for(let x = 0; x < this.cards.length; x++) {
             switch(this.cards[x].isAce) {
                 case true: break
@@ -73,6 +75,11 @@ export class BlackJackPlayer implements BlackJackPlayerInterface {
         }
        
         this.total += this.addAcesToTotal(this.cards , t)
+
+        if(totalOfRequiredUsedCards !== this.usedCards.length) {
+            throw new Error(`Used cards should now have ${this.usedCards} but has ${totalOfRequiredUsedCards}`)
+        }
+
         return this.total
     }
 
@@ -113,7 +120,7 @@ export class BlackJackPlayer implements BlackJackPlayerInterface {
         this.cards.push(card)
 
         // we only continue to check if bust if the user has more than 2 cards
-        if(this.cards.length <= 2) return
+        if(this.cards.length < 2 && this.usedCards.length === 0) return
 
         if(this.isBust()) {
             throw new Error('The player has bust with a total of : ' + this.total)

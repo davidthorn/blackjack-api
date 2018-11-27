@@ -15,7 +15,7 @@ let card1 = new PlayingCard("diamond" , "11" , 11, false)
 
 player.hit(card)
 player.hit(card1)
-assert.equal(player.cards.length , 2, "The player should have two cards")
+assert.equal(player.usedCards.length , 2, "The player should have two cards")
 let total = player.totalCards()
 assert.equal(total , 21, "The cards should equal 21 and equals " + total )
 assert.equal(player.hasBlackjack() , true , "The player should have black jack")
@@ -61,6 +61,10 @@ player.reset()
 assert.equal(winnings ,player.bank, `The players bank should have ${winnings} in it`)
 
 let currentTotalOfCards = player.cards.length
+
+assert.throws(() => { player.hold() } , "Must throw because player has not received a minimum of 2 cards")
+player.hit(card)
+player.hit(card1)
 player.hold()
 
 assert.throws(() => { player.hit(card) }, "The functon must throw because the user has held already")
